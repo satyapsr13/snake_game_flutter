@@ -23,7 +23,7 @@ List<Color> colors = [
 
 List<int> snake = [20, 21, 22, 23, 24];
 List<int> level = [700, 600, 500, 300];
-int food = 250;
+int food = 20;
 // Timer? timer;
 
 class _HomePageState extends State<HomePage> {
@@ -90,6 +90,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  int foodColor = 0;
   int gameLevel = level[2];
   int speed = 500;
   void startGame() {
@@ -102,6 +103,7 @@ class _HomePageState extends State<HomePage> {
     isGameOver = false;
     Timer.periodic(Duration(milliseconds: gameLevel), (timer) {
       setState(() {
+        foodColor++;
         if (isGameOver) {
           timer.cancel();
         }
@@ -139,14 +141,16 @@ class _HomePageState extends State<HomePage> {
           }
         }
 
-        if (snake.last == food) {
+        if (snake.contains(food)) {
           // _audioCache.play('eat.wav');
           food = Random().nextInt(200);
-          if (snake.contains(food)) {
-            food += 10;
-          }
+          food += 2;
+          // if (snake.contains(food)) {
+          //   setState(() {
+          //     food += 10;
+          //   });
+          // }
           score += 10;
-          // speed -= 80;
         }
       });
       if (snake.last == food) {
@@ -353,7 +357,7 @@ class _HomePageState extends State<HomePage> {
                   itemBuilder: (ctx, index) => Container(
                     decoration: BoxDecoration(
                       color: index == food
-                          ? colors[index % colors.length]
+                          ? colors[foodColor % colors.length]
                           : snake.contains(index)
                               ? const Color.fromARGB(251, 245, 241, 241)
                               : const Color.fromARGB(50, 255, 255, 255),
